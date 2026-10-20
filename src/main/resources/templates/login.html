@@ -6,6 +6,7 @@
 </head>
 <body>
     <h2>로그인 페이지</h2>
+    <p th:if="${param.registered}" style="color: green;">회원가입 완료! 로그인해주세요.</p>
     <div th:if="${param.error}">
         <p style="color: red;">아이디 또는 비밀번호가 잘못되었습니다.</p>
     </div>
@@ -22,5 +23,6 @@
         </div>
         <button type="submit">로그인</button>
     </form>
+    <p>계정이 없으신가요? <a th:href="@{/signup}">회원가입</a></p>
 </body>
 </html>

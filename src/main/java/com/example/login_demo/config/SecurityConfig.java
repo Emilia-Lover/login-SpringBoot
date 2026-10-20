@@ -7,6 +7,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -18,10 +20,11 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/", "/home", "/css/**").permitAll()
+                .requestMatchers("/", "/home", "/css/**", "/signup").permitAll()
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
+                    .loginPage("/login")
                 .defaultSuccessUrl("/hello", true) // 로그인 성공 시 이동할 페이지
                 .permitAll()
             )
@@ -34,13 +37,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails user = User.builder()
-            .username("user")
-            .password("{noop}1234") // {noop}을 통해 암호화 없이 비밀번호 설정
-            .roles("USER")
-            .build();
-
-        return new InMemoryUserDetailsManager(user);
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
+
 }
